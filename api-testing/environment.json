@@ -1,0 +1,16 @@
+{
+	"id": "051d3ae2-dc06-4c00-90ad-0b3f8235cf9f",
+	"name": "PROD",
+	"values": [
+		{
+			"key": "URL",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-02-28T01:43:55.372Z",
+	"_postman_exported_using": "Postman/11.84.5"
+}

@@ -1,0 +1,238 @@
+{
+  "info": {
+    "_postman_id": "4f56c18f-0f12-4e5b-b189-90dae7539efc",
+    "name": "QA Assessment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47034833",
+    "_collection_link": "https://go.postman.co/collection/47034833-4f56c18f-0f12-4e5b-b189-90dae7539efc?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Valid Tracking Number",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "//  tracking number = 6636234, 7234258, 9442984, 1094442 \r",
+              "pm.collectionVariables.set(\"trackingNumber\", \"7234258\");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 100 ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(100);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "const responseJson = pm.response.json();\r",
+              "\r",
+              "pm.test('Provider value is \"Bosta\"', function () {\r",
+              "    pm.expect(responseJson.provider).to.eql(\"Bosta\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"TrackingNumber exists in response\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"TrackingNumber\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"TrackingNumber matches requested tracking number\", function () {\r",
+              "    pm.expect(responseJson.TrackingNumber.toString()).to.eql(pm.variables.get(\"trackingNumber\").toString());\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Successful GET request\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"CreateDate exists in response\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"CreateDate\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"SupportPhoneNumbers exists in response\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"SupportPhoneNumbers\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"SupportPhoneNumbers is an array\", function () {\r",
+              "    pm.expect(responseJson.SupportPhoneNumbers).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"TrackingURL exists in response\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"TrackingURL\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"TrackingURL\", function () {\r",
+              "    pm.expect(pm.response.text()).to.include(\"track_num=7234258\");\r",
+              "});\r",
+              "\r",
+              "// Header Validation\r",
+              "pm.test(\"Ensure that the content-type exists in the response\", function(){\r",
+              "    pm.response.to.have.header(\"Content-Type\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Content-Type is application/json\", function () {\r",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-Requested-By",
+            "value": "Landmark",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{URL}}/shipments/track/{{trackingNumber}}",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "shipments",
+            "track",
+            "{{trackingNumber}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid Tracking Number",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "//  tracking number = 6636234, 7234258, 9442984, 1094442 \r",
+              "pm.collectionVariables.set(\"trackingNumber\", \"6636234\");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 250 ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(250);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "const responseJson = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Response contains error field\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"error\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message is correct\", function () {\r",
+              "    pm.expect(responseJson.error).to.eql(\"Invalid tracking number!\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains status field\", function () {\r",
+              "    pm.expect(responseJson).to.have.property(\"status\");\r",
+              "});\r",
+              "\r",
+              "pm.test('Status value is \"Not Found.\"', function () {\r",
+              "    pm.expect(responseJson.status).to.eql(\"Not Found.\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-Requested-By",
+            "value": "Landmark",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{URL}}/shipments/track/{{trackingNumber}}",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "shipments",
+            "track",
+            "{{trackingNumber}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "trackingNumber",
+      "value": ""
+    }
+  ]
+}
